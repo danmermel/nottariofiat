@@ -9,7 +9,7 @@ console.log('id', id);
 
 var data = {
   id: id, 
-  status: 'new',
+  stat: 'new',
   hash: 'safasfasf',
   name: 'dog.png',
   type: 'image/png',
