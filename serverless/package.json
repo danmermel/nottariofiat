@@ -21,5 +21,7 @@
   },
   "homepage": "https://github.com/danmermel/nottariofiat#readme",
   "dependencies": {
+    "qs": "^6.5.1",
+    "stripe": "^5.5.0"
   }
 }
