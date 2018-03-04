@@ -1,5 +1,5 @@
 {
-  "name": "nottariofiat",
+  "name": "serverless_check",
   "version": "1.0.0",
   "description": "nottarisation with fiat",
   "main": "index.js",
@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/danmermel/nottariofiat#readme",
   "dependencies": {
-    "qs": "^6.5.1",
-    "stripe": "^5.5.0"
+    "qs": "^6.5.1"
   }
 }
