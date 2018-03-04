@@ -39,7 +39,8 @@ sqs.receiveMessage(params, function(err, data) {
               console.log(err, data);
             })
 
-          }
+          } 
+
           console.log (err,ethdata);
           // now delete message
           var params = {

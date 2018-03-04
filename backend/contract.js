@@ -9,6 +9,8 @@ var submitToBlockchain = function(id, hash, name, type, size, lastModified, call
 
   var nottarioContract = new web3.eth.Contract(abi, {from: "0x47da15b40c283d1d33b3aafc6acdaabcfcac8061", gas: 500000, data: bin});
   var txhash = null;
+  var completed_date = null;
+  var submitted_date = null;
   var args = [ web3.utils.asciiToHex(hash), web3.utils.asciiToHex(name), web3.utils.asciiToHex(type), size, lastModified];
   console.log(args);
   nottarioContract.deploy({
@@ -18,13 +20,15 @@ var submitToBlockchain = function(id, hash, name, type, size, lastModified, call
   .on('transactionHash', function(th) { 
     console.log('tx', th); 
     txhash = th;
-    db.update(id,txhash,"TBC","submitted",  function (err,data) {
+    submitted_date = new Date().toISOString();
+    db.update(id,txhash,"TBC","submitted", submitted_date, "TBC",  function (err,data) {
       console.log("db updated..", err, data);
     })
    })
   .on('receipt', function(receipt) { 
     console.log('receipt', receipt); 
-    db.update(id,txhash,receipt.contractAddress,"completed",  function (err,data) {
+    completed_date = new Date().toISOString();
+    db.update(id,txhash,receipt.contractAddress,"completed", submitted_date, completed_date,  function (err,data) {
       console.log("db updated..", err, data);
       callback(null, { tx: txhash, address: receipt.contractAddress }); 
     });

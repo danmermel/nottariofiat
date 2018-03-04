@@ -42,18 +42,20 @@ var read = function(id, callback) {
   docClient.get(obj, callback);  
 }
 
-var update = function (id, tx, add, stat,  callback) {
+var update = function (id, tx, add, stat, submitted_date, completed_date, callback) {
 
   var params = {
     TableName:table,
     Key:{
         "id": id
     },
-    UpdateExpression: "set eth_transaction_id = :r, eth_contract_id = :s, stat = :t",
+    UpdateExpression: "set eth_transaction_id = :r, eth_contract_id = :s, stat = :t, submitted_date = :u, completed_date = :v",
     ExpressionAttributeValues:{
         ":r":tx,
         ":s":add,
-        ":t":stat
+        ":t":stat,
+        ":u":submitted_date,
+        ":v":completed_date
     },
     ReturnValues:"UPDATED_NEW"
   };
