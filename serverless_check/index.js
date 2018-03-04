@@ -17,7 +17,7 @@ exports.handler = function (event, context, callback) {
    if (err) {
      throw(new Error('invalid id'));
    } else {
-     callback(null, { statusCode: 200, body:JSON.stringify(data) }) 
+     callback(null, { statusCode: 200, headers: { 'Access-Control-Allow-Origin': '*'},body:JSON.stringify(data) }) 
      
    }
   })

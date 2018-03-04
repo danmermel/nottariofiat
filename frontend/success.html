@@ -1,1 +1,30 @@
-SUCCESS!
+<html>
+  
+<body>
+  <h1>Success!</h1>
+  <h2>Status</h2>
+  <div id="status"></div>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+     var id = window.location.search.replace(/^\?/,'')
+     console.log(id);
+     var action_url = 'https://o8lbv2rr1e.execute-api.eu-west-1.amazonaws.com/nottario_live/nottarioFiatCheck';
+     setInterval(function() {
+       $.ajax({
+         type: 'POST',
+         url: action_url,
+         data: { id: id },
+         error: function(e) {
+           console.log('error',e);
+         },
+         success: function(d) {
+           $('#status').html(JSON.stringify(d.Item));
+           console.log('success', d);
+         }
+       })
+     }, 5000);
+
+  </script>
+
+</body>
+</html>
