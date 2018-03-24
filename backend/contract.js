@@ -11,7 +11,7 @@ var submitToBlockchain = function(id, hash, name, type, size, lastModified, call
   var txhash = null;
   var completed_date = null;
   var submitted_date = null;
-  var args = [ web3.utils.asciiToHex(hash), web3.utils.asciiToHex(name), web3.utils.asciiToHex(type), size, lastModified];
+  var args = [ "0x"+hash, web3.utils.asciiToHex(name), web3.utils.asciiToHex(type), size, lastModified];
   console.log(args);
   nottarioContract.deploy({
     arguments: args

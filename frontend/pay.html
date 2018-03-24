@@ -1,0 +1,48 @@
+<html>
+<head>
+</head>
+<body>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <form action="https://o8lbv2rr1e.execute-api.eu-west-1.amazonaws.com/nottario_live/nottarioFiatPayment" method="POST">
+    <input id="name" type="text" name="name" value="dog.png">
+    <input id="type" type="text" name="type" value="img/png">
+    <input id="size" type="text" name="size" value="1234567">
+    <input id="lastModified" type="text" name="lastModified" value="4567890">
+    <input id="hash" type="text" name="hash" value="1234ghjyt666">
+    <input type="hidden" name="success" value="http://windermere:8000/success.html">
+    <input type="hidden" name="failure" value="http://windermere:8000/error.html">
+
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="pk_test_zE1cLFQnntEaB2cQST1Hcmhf"
+      data-amount="999"
+      data-name="Exor Ventures Ltd"
+      data-description="Notarisation charge"
+      data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+      data-locale="auto"
+      data-currency="gbp">
+    </script>
+  </form>
+
+  <script>
+    var str = window.location.search.replace(/^\?/,'')
+    console.log(str);
+    var bits = str.split('&')
+    console.log(bits);
+    var obj =  {};
+    // ["x=1","y=2"] 
+    for(var i in bits) {
+      var bit = bits[i];
+      var kv = bit.split('=');
+      obj[kv[0]]=decodeURIComponent(kv[1]);
+    }
+    console.log(obj);
+    $('#name').val(obj.name);
+    $('#size').val(obj.size);
+    $('#type').val(obj.type);
+    $('#lastModified').val(obj.lastModified);
+    $('#hash').val(obj.hash);
+
+  </script>
+</body>
+</html>

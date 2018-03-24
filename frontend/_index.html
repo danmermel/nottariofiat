@@ -1,0 +1,27 @@
+<html>
+<head>
+</head>
+<body>
+  <form action="https://o8lbv2rr1e.execute-api.eu-west-1.amazonaws.com/nottario_live/nottarioFiatPayment" method="POST">
+    <input type="hidden" name="name" value="dog.png">
+    <input type="hidden" name="type" value="img/png">
+    <input type="hidden" name="size" value="1234567">
+    <input type="hidden" name="lastModified" value="4567890">
+    <input type="hidden" name="hash" value="1234ghjyt666">
+    <input type="hidden" name="success" value="http://windermere:8000/success.html">
+    <input type="hidden" name="failure" value="http://windermere:8000/error.html">
+
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="pk_test_zE1cLFQnntEaB2cQST1Hcmhf"
+      data-amount="999"
+      data-name="Exor Ventures Ltd"
+      data-description="Notarisation charge"
+      data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+      data-locale="auto"
+      data-currency="gbp">
+    </script>
+  </form>
+
+</body>
+</html>
