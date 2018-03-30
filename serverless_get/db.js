@@ -2,8 +2,9 @@ var AWS = require('aws-sdk')
 AWS.config.loadFromPath('./config.json');
 
 var dynamodb = new AWS.DynamoDB();
+var config = require('./config.json');
 
-var table = "nottariodb";
+var table = config.database;
 
 var docClient = new AWS.DynamoDB.DocumentClient()
 
