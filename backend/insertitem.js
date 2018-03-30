@@ -1,8 +1,8 @@
 var queue = require('./queue.js');
 var db = require('./db.js');
 var uuid = require('uuid/v4');
-
-var url = 'https://sqs.eu-west-1.amazonaws.com/160991186365/nottario-new.fifo'
+var config = require('./config.json');
+var url = config.mainQueue;
 
 var id = uuid();
 console.log('id', id);

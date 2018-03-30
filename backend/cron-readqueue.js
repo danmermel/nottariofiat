@@ -4,9 +4,10 @@ var db = require('./db.js');
 
 var AWS = require('aws-sdk')
 AWS.config.loadFromPath('./config.json');
+var config = require('./config.json');
 
 var sqs = new AWS.SQS();
-var queueURL = 'https://sqs.eu-west-1.amazonaws.com/160991186365/nottario-new.fifo';
+var queueURL = config.mainQueue;
 
 var params = {
   QueueUrl: queueURL,
@@ -34,7 +35,7 @@ sqs.receiveMessage(params, function(err, data) {
         ethereum.submitToBlockchain(id,hash,name,type,size,lastModified,function(err, ethdata) {
           if (err) {
             // add to our error queue
-            var url = 'https://sqs.eu-west-1.amazonaws.com/160991186365/errors.fifo';
+            var url = config.errorQueue;
             queue.add(url,'error', hash, name, type, size.toString(), lastModified.toString(), function(err, data) { 
               console.log(err, data);
             })

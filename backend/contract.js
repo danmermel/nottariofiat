@@ -4,10 +4,11 @@ var bin = "0x6060604052341561000f57600080fd5b60405160a08061033b83398101604052808
 var Web3 = require('web3');
 var web3 = new Web3('http://localhost:8545');
 var db = require('./db.js');
+var config = require('./config.json')
 
 var submitToBlockchain = function(id, hash, name, type, size, lastModified, callback) {
 
-  var nottarioContract = new web3.eth.Contract(abi, {from: "0x47da15b40c283d1d33b3aafc6acdaabcfcac8061", gas: 500000, data: bin});
+  var nottarioContract = new web3.eth.Contract(abi, {from: config.ethWallet, gas: 500000, data: bin});
   var txhash = null;
   var completed_date = null;
   var submitted_date = null;
