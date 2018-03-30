@@ -2,8 +2,8 @@ var AWS = require('aws-sdk')
 AWS.config.loadFromPath('./config.json');
 
 var dynamodb = new AWS.DynamoDB();
-
-var table = "nottariodb";
+var config = require('./config.json');
+var table = config.database;
 
 var docClient = new AWS.DynamoDB.DocumentClient()
 
@@ -11,9 +11,9 @@ var write  = function(data, callback) {
 
   var params = {
     RequestItems: {
-      nottariodb: []
     }
   };
+  params.RequestItems[table] = []
 
   var obj = {
     PutRequest: {
@@ -39,7 +39,7 @@ var write  = function(data, callback) {
   obj.PutRequest.Item.amount = {N: ""+data.amount};
   obj.PutRequest.Item.client_email = {S: data.client_email};
 
-  params.RequestItems.nottariodb.push(obj);
+  params.RequestItems[table].push(obj);
   console.log(JSON.stringify(params))   
   dynamodb.batchWriteItem(params,callback);
 

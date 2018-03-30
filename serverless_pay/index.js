@@ -3,7 +3,8 @@ var AWS = require('aws-sdk');
 var qs = require('qs');
 var db =  require('./db.js');
 var queue = require('./queue.js');
-var stripe=require('stripe')(process.env.stripe_secret_key);
+var config = require('./config.json');
+var stripe=require('stripe')(config.stripeSecretKey);
 
 // Load credentials and set the region from the JSON file
 AWS.config.loadFromPath('./config.json');
@@ -21,9 +22,9 @@ exports.handler = function (event, context, callback) {
   }
 // Charge the user's card:
   stripe.charges.create({
-    amount: 999,
-    currency: "gbp",
-    description: "Example charge",
+    amount: config.price,
+    currency: config.currency,
+    description: config.description,
     source: token,
   }, function(err, charge) {
      console.log(err, charge);
@@ -52,7 +53,7 @@ exports.handler = function (event, context, callback) {
            // this is bad because we have taken payment but done nothing else
            throw(new Error('failed to write to database'))
          } else  {
-           queue.add(process.env.queue_url,"nottarise this", charge.id, function(err,data) {
+           queue.add(config.mainQueue,"nottarise this", charge.id, function(err,data) {
              console.log(err,data);
              if (err) {
                // this is bad because we have taken payment, written to DB but not to the queue
