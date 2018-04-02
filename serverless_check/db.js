@@ -2,7 +2,7 @@ var AWS = require('aws-sdk')
 AWS.config.loadFromPath('./config.json');
 
 var dynamodb = new AWS.DynamoDB();
-var config = require('./config.json);
+var config = require('./config.json');
 
 var table = config.database;
 
