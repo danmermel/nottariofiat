@@ -11,7 +11,7 @@ exports.handler = function (event, context, callback) {
   console.log('THE DATA', body);
   console.log('context',JSON.stringify(context));
   var sns = new AWS.SNS();
-  var message = body.name + ' ' + body.email + ' ' + body.message
+  var message = body.submissionid + ' ' + body.name + ' ' + body.email + ' ' + body.message
   sns.publish({
     Message: message,
     TopicArn:  config.contactTopic
