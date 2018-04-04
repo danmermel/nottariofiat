@@ -8,3 +8,6 @@ cd ..
 cd serverless_pay
 ./deploy_test.sh
 cd ..
+cd serverless_contact
+./deploy_test.sh
+cd ..

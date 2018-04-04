@@ -8,3 +8,7 @@ cd ..
 cd serverless_pay
 ./deploy_prod.sh
 cd ..
+cd serverless_contact
+./deploy_prod.sh
+cd ..
+
