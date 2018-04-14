@@ -2,6 +2,9 @@
 cd serverless_check
 ./deploy_prod.sh
 cd ..
+cd serverless_notify
+./deploy_prod.sh
+cd ..
 cd serverless_get
 ./deploy_prod.sh
 cd ..
