@@ -9,6 +9,10 @@ var stripe=require('stripe')(config.stripeSecretKey);
 // Load credentials and set the region from the JSON file
 AWS.config.loadFromPath('./config.json');
 
+var isNumeric = function(str) {
+  return str.match(/^[0-9]+$/)
+}
+
 exports.handler = function (event, context, callback) {
   var body = qs.parse(event.body);
   console.log(body);
@@ -16,10 +20,26 @@ exports.handler = function (event, context, callback) {
 // Get the payment token ID submitted by the form:
   var token = body.stripeToken;
   console.log(token);
+  if (!body.name || !body.type || ! body.size || !body.lastModified ||  !body.hash) {
+    console.log('Missing mandatory parameters');
+    return callback(null,{ "statusCode": 302, "headers": {"Location": body.error }});
+  }
+
+  if (!isNumeric(body.lastModified) || !isNumeric(body.size)) {
+    console.log('Non-numeric characters in lastModified or size');
+    return callback(null,{ "statusCode": 302, "headers": {"Location": body.error }});
+  }
+
+  if(body.hash.length != 64) {
+    console.log('Hash must be 64 characters');
+    return callback(null,{ "statusCode": 302, "headers": {"Location": body.error }});
+  } 
 
   if (!token) {
-    throw(new Error('missing stripe token'))
+    console.log('Missing stripe token');
+    return callback(null,{ "statusCode": 302, "headers": {"Location": body.error }});
   }
+
 // Charge the user's card:
   stripe.charges.create({
     amount: config.price,
