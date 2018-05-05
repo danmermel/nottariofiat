@@ -37,8 +37,9 @@ sqs.receiveMessage(params, function(err, data) {
           if (err) {
             // add to our error queue
             var url = config.errorQueue;
-            queue.add(url,'error', hash, name, type, size.toString(), lastModified.toString(), function(err, data) { 
+            queue.add(url,JSON.stringify(dbdata),id, function(err, data) { 
               console.log(err, data);
+              process.exit();
             })
 
           } 
