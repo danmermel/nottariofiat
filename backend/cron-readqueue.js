@@ -32,7 +32,17 @@ sqs.receiveMessage(params, function(err, data) {
 	var type = dbdata.Item.type;
 	var size = parseInt(dbdata.Item.size);
 	var lastModified = parseInt(dbdata.Item.lastModified);
-        
+
+        // before sending to the blockchain, delete the queue item
+        // to prevent multiple provisioning attempts
+        var params = {
+          QueueUrl: queueURL, 
+          ReceiptHandle : data.Messages[0].ReceiptHandle
+        }
+        sqs.deleteMessage(params, function (err, deldata){
+          console.log(err,deldata);
+        });
+
         ethereum.submitToBlockchain(id,hash,name,type,size,lastModified,function(err, ethdata) {
           if (err) {
             // add to our error queue
@@ -45,15 +55,6 @@ sqs.receiveMessage(params, function(err, data) {
           } 
 
           console.log (err,ethdata);
-          // now delete message
-          var params = {
-            QueueUrl: queueURL, 
-            ReceiptHandle : data.Messages[0].ReceiptHandle
-          }
-          sqs.deleteMessage(params, function (err, deldata){
-            console.log(err,deldata);
-          });
-
         })
       });   
     } 
