@@ -2,6 +2,7 @@
 var AWS = require('aws-sdk');
 var qs = require('qs');
 var db =  require('./db.js');
+var tokenlib = require('./token.js');
 var queue = require('./queue.js');
 var config = require('./config.json');
 var stripe=require('stripe')(config.stripeSecretKey);
@@ -11,6 +12,44 @@ AWS.config.loadFromPath('./config.json');
 
 var isNumeric = function(str) {
   return str.match(/^[0-9]+$/)
+}
+
+var provision = function(id, body, charge, callback) {
+      //build object
+       var obj = {
+        id: id,    //use stripe ref as unique id
+        stat: "paid",                     // new, paid, queued, submitted, completed, error
+        stripe_ref: id,
+        new_date: new Date().toISOString(),
+        paid_date:new Date().toISOString(),
+        hash: body.hash,
+        name: body.name,
+        type: body.type,
+        size : body.size,
+        lastModified: body.lastModified,
+        currency: charge.currency,
+        amount: charge.amount,
+        client_email : body.stripeEmail
+       };
+       db.write(obj, function(err,data) {
+         console.log(err,data);
+         if (err) {
+           // this is bad because we have taken payment but done nothing else
+           throw(new Error('failed to write to database'))
+         } else  {
+           queue.add(config.mainQueue,"nottarise this", id, function(err,data) {
+             console.log(err,data);
+             if (err) {
+               // this is bad because we have taken payment, written to DB but not to the queue
+               throw(new Error('failed to write to the queue'))
+             } else {
+               callback(null,{ "statusCode": 302, "headers": {"Location": body.success + '?' + id }});
+             }
+           })
+         }
+
+       });
+
 }
 
 exports.handler = function (event, context, callback) {
@@ -35,59 +74,41 @@ exports.handler = function (event, context, callback) {
     return callback(null,{ "statusCode": 302, "headers": {"Location": body.error }});
   } 
 
-  if (!token) {
-    console.log('Missing stripe token');
+  if (!token && !body.voucherCode) {
+    console.log('Missing token');
     return callback(null,{ "statusCode": 302, "headers": {"Location": body.error }});
   }
 
-// Charge the user's card:
-  stripe.charges.create({
-    amount: config.price,
-    currency: config.currency,
-    description: config.description,
-    source: token,
-  }, function(err, charge) {
-     console.log(err, charge);
-     if (err) {
-       throw(new Error('stripe charge failed'))
-     } else {
-       //build object
-       var obj = {
-        id: charge.id,    //use stripe ref as unique id
-        stat: "paid",                     // new, paid, queued, submitted, completed, error
-        stripe_ref: charge.id,
-        new_date: new Date().toISOString(),
-        paid_date:new Date().toISOString(),
-        hash: body.hash,
-        name: body.name,
-        type: body.type,
-        size : body.size,
-        lastModified: body.lastModified,
-        currency: charge.currency,
-        amount: charge.amount,
-        client_email : body.stripeEmail
-       };
-       db.write(obj, function(err,data) {
-         console.log(err,data);
-         if (err) {
-           // this is bad because we have taken payment but done nothing else
-           throw(new Error('failed to write to database'))
-         } else  {
-           queue.add(config.mainQueue,"nottarise this", charge.id, function(err,data) {
-             console.log(err,data);
-             if (err) {
-               // this is bad because we have taken payment, written to DB but not to the queue
-               throw(new Error('failed to write to the queue'))
-             } else {
-               callback(null,{ "statusCode": 302, "headers": {"Location": body.success + '?' + charge.id }});
-             }
-           })
-         }
+  // if we have a stripe token
+  if (token) {
 
-       });
-   
-     };
-  })
- 
+    // Charge the user's card:
+    stripe.charges.create({
+      amount: config.price,
+      currency: config.currency,
+      description: config.description,
+      source: token,
+    }, function(err, charge) {
+       console.log(err, charge);
+       if (err) {
+         console.log('Failed stripe API call');
+         return callback(null,{ "statusCode": 302, "headers": {"Location": body.error }});
+       } else {
+         provision(charge.id, body, charge, callback);
+       }
+     });
+   } else if (body.voucherCode) {
+     body.stripeEmail = body.voucherEmail;
+     // redeem Nottario token
+     tokenlib.spend_token(body.voucherCode, function(err, data) {
+       console.log(err, data);
+       if (err) {
+         console.log('Invalid voucher code');
+         return callback(null,{ "statusCode": 302, "headers": {"Location": body.error }});
+       } else {
+         provision(body.voucherCode, body, { currency: 'gbp', amount:0}, callback);
+       }
+     });
+   }
 };
 
