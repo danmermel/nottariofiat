@@ -45,7 +45,17 @@ var write  = function(data, callback) {
 
 };
 
+var read = function(id, callback) {
+
+  var obj = { TableName : table,
+	   Key: { "id": id}
+      };
+
+  docClient.get(obj, callback);  
+}
+
 
 module.exports = {
-  write: write
+  write: write,
+  read: read
 };
