@@ -65,8 +65,28 @@ var update = function (id, tx, add, stat, submitted_date, completed_date, callba
 
 }
 
+var update_ipfs = function (id, hash, callback) {
+
+  var params = {
+    TableName:config.ipfsDatabase,
+    Key:{
+        "id": id
+    },
+    UpdateExpression: "set ipfs_hash = :r",
+    ExpressionAttributeValues:{
+        ":r":hash
+    },
+    ReturnValues:"UPDATED_NEW"
+  };
+
+  console.log("Updating the item...");
+  docClient.update(params, callback);
+
+}
+
 module.exports = {
   write: write,
   read: read,
-  update: update
+  update: update,
+  update_ipfs: update_ipfs
 };
