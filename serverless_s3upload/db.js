@@ -25,6 +25,7 @@ var write  = function(data, callback) {
   obj.PutRequest.Item.type = {S: data.type};
   obj.PutRequest.Item.size = {S: data.size};
   obj.PutRequest.Item.lastModified = {S: data.lastModified};
+  obj.PutRequest.Item.hash = {S: data.hash};
 
   params.RequestItems[table].push(obj);
   console.log(JSON.stringify(params))   
