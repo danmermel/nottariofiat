@@ -16,7 +16,7 @@ ourdecblock=$(($ourhexblock))
 echo "$ourdecblock / $decblock"
 let blockdiff=$decblock-$ourdecblock
 echo "Diff is $blockdiff"
-if [ $blockdiff -ge 100 ]
+if [ $blockdiff -ge 500 ]
   then
    aws sns publish --topic-arn arn:aws:sns:eu-west-1:160991186365:webmails --message "Out of sync by $blockdiff blocks on $HOSTNAME"
 fi
