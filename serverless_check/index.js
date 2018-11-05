@@ -4,7 +4,7 @@ var qs = require('qs');
 var db =  require('./db.js');
 
 // Load credentials and set the region from the JSON file
-AWS.config.loadFromPath('./config.json');
+//AWS.config.loadFromPath('./config.json');
 
 exports.handler = function (event, context, callback) {
   var body = qs.parse(event.body);

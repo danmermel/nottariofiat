@@ -13,9 +13,9 @@ var add = function(qurl, body, id, callback) {
       DataType: 'String', /* required */
       StringValue: id
     }
-  },
-  MessageDeduplicationId: new Date().getTime().toString(),
-  MessageGroupId: 'ipfsation'
+  }
+//  MessageDeduplicationId: new Date().getTime().toString(),
+//  MessageGroupId: 'ipfsation'
   };
 
   sqs.sendMessage(params, callback);
@@ -24,3 +24,4 @@ var add = function(qurl, body, id, callback) {
 module.exports = {
   add: add
 }
+

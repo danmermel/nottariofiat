@@ -13,9 +13,9 @@ var add = function(qurl, body, id, callback) {
       DataType: 'String', /* required */
       StringValue: id
     }
-  },
-  MessageDeduplicationId: new Date().getTime().toString(),
-  MessageGroupId: 'nottarisation'
+  }//,
+//  MessageDeduplicationId: new Date().getTime().toString(),
+//  MessageGroupId: 'nottarisation'
   };
 
   sqs.sendMessage(params, callback);

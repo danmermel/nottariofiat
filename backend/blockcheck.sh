@@ -7,6 +7,7 @@ if [ $HOSTNAME == 'windermere' ]
   then
     domain="rinkeby"
   fi
+echo "starting..."
 
 hexblock=`curl -s "https://${domain}.etherscan.io/api?module=proxy&action=eth_blockNumber&apikey=YourApiKeyToken" | jq -r .result`
 decblock=$(($hexblock))
