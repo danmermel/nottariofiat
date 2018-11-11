@@ -1,6 +1,13 @@
 #!/bin/bash
+
 SUFFIX="stage"
-echo "$SUFFIX ${SUFFIX}"
+
+if [ "$1" = "prod" ] 
+  then
+  SUFFIX="prod"
+fi
+
+echo " Deploying a  ${SUFFIX} environment! "
 
 echo "create main dynamodb table with one secondary index..."
 aws dynamodb create-table --table-name "nottariodb-${SUFFIX}" \
