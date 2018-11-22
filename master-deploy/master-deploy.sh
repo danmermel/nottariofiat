@@ -316,7 +316,7 @@ aws lambda add-permission \
     --statement-id nottarioFiatipfsQueuer-$SUFFIX \
     --action "lambda:*" \
     --principal s3.amazonaws.com \
-    --source-arn "arn:aws:s3:::ipfsuploads-stage"
+    --source-arn "arn:aws:s3:::ipfsuploads-${SUFFIX}"
 
 echo "create ipfs trigger from S3"
 LAMBDACONFIG='{"LambdaFunctionConfigurations":[{"Id":"IPFS_upload_trigger","LambdaFunctionArn":"arn:aws:lambda:eu-west-1:160991186365:function:nottarioFiatipfsQueuer-SUFFIX","Events":["s3:ObjectCreated:*"]}]}'
