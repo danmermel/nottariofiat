@@ -8,7 +8,7 @@ var web3 = null;
 dns.lookup(config.web3domain, function(err, data) {
    config.web3 = config.web3.replace(/DOMAIN/, data);
    console.log('config.web3', config.web3);
-   var web3 = new Web3(config.web3);
+   web3 = new Web3(config.web3);
 });
 var db = require('./db.js');
 
